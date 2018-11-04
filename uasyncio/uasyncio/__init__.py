@@ -23,6 +23,14 @@ class PollEventLoop(EventLoop):
         self.poller = select.poll()
         self.objmap = {}
 
+    def close(self):
+        super().close()
+        for key in list(self.objmap.keys()):
+            del self.objmap[key]
+        ## We cannot get the content of the poller (objmap did only contains the IDs of the sockets, 
+        ## not the socket objects itself) That's why we create a new poller and let the GC do its job
+        self.poller = select.poll()
+
     def add_reader(self, sock, cb, *args):
         if DEBUG and __debug__:
             log.debug("add_reader%s", (sock, cb, args))
