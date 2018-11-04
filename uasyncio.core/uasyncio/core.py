@@ -184,8 +184,12 @@ class EventLoop:
         self.call_soon((lambda: (yield StopLoop(0)))())
 
     def close(self):
-        pass
 
+        dummy_list = [None, None, None]
+        while self.runq:
+            self.runq.popleft()
+        while self.waitq:
+            self.waitq.pop(dummy_list)
 
 class SysCall:
 
