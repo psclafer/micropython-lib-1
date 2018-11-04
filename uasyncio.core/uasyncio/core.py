@@ -184,7 +184,7 @@ class EventLoop:
         self.call_soon((lambda: (yield StopLoop(0)))())
 
     def close(self):
-
+        self.cur_task = None
         dummy_list = [None, None, None]
         while self.runq:
             self.runq.popleft()
